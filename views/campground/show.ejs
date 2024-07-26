@@ -1,0 +1,118 @@
+<% layout("/layout/boilerplate") %>
+
+<div class="container my-4">
+  <div class="row">
+    <!-- Campground Details Column -->
+    <div
+      class="col-6"
+      style="
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+      "
+    >
+      <img
+        src="<%= campground.image %>"
+        class="img-fluid"
+        alt="<%= campground.title %>"
+        style="height: 200px; object-fit: cover; width: 100%"
+      />
+      <h5 class="mt-3"><%= campground.title %></h5>
+      <p><%= campground.description %></p>
+      <ul class="list-unstyled">
+        <li><strong>Location:</strong> <%= campground.location %></li>
+        <li><strong>Submitted by:</strong> <%= campground.author.username %></li>
+        <li><strong>Price:</strong> $<%= campground.price %>/night</li>
+      </ul>
+      <% if (currentUser && currentUser._id && campground.author.equals(currentUser._id)) { %>
+      <div>
+        <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info"
+          >Edit</a
+        >
+        <form
+          action="/campgrounds/<%= campground._id %>?_method=DELETE"
+          method="post"
+          style="display: inline"
+        >
+          <input
+            type="submit"
+            value="Delete Campground"
+            class="btn btn-danger"
+          />
+        </form>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Reviews Column -->
+    <div
+      class="col-6"
+      style="
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+      "
+    >
+      <h2>Leave a Review</h2>
+      <form
+        class="mb-3 form-validation"
+        action="/campgrounds/<%= campground._id %>/reviews"
+        method="POST"
+        novalidate
+      >
+        <div class="mb-3">
+          <label for="customRange3" class="form-label"
+            >Give a rating between 1 and 5</label
+          >
+          <input
+            type="range"
+            class="form-range"
+            name="review[rating]"
+            min="1"
+            max="5"
+            step="1"
+            id="customRange3"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label"
+            >Leave your comments</label
+          >
+          <textarea
+            class="form-control"
+            name="review[body]"
+            id="exampleFormControlTextarea1"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+        <button class="btn btn-success" type="submit">Submit Review</button>
+      </form>
+      <h2 class="mt-4">Camper Reviews</h2>
+      <div style="overflow-y: auto; max-height: 400px">
+        <% if (campground.reviews.length > 0) { %> <% for (let review of
+        campground.reviews) { %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p><strong>Rating:</strong> <%= review.rating %></p>
+            <p><strong>Comments:</strong> <%= review.body %></p>
+            <form
+              action="/campgrounds/<%= campground._id%>/reviews/<%= review._id%>?_method=DELETE"
+              method="post"
+            >
+              <button class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+        <% } %> <% } else { %>
+        <p>No reviews yet. Be the first to leave a review!</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
