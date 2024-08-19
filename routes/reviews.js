@@ -8,6 +8,8 @@ const Review = require("../models/reviews");
 const Campground = require("../models/campground");
 const { reviewValidation } = require("../models/campValidation");
 
+const { isLoggedIn } = require("../middleware");
+
 const validateReview = (req, res, next) => {
   const { error } = reviewValidation.validate(req.body);
   if (error) {
@@ -20,6 +22,7 @@ const validateReview = (req, res, next) => {
 
 router.post(
   "/",
+  isLoggedIn,
   validateReview,
   catchAsync(async (req, res) => {
     console.log("Received POST request to add review");
@@ -29,11 +32,12 @@ router.post(
       throw new ExpressError("Campground not found", 404);
     }
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     console.log("Created new review:", review);
     campground.reviews.push(review);
     await review.save();
     await campground.save();
-    req.flash("success", "Review added")
+    req.flash("success", "Review added");
     console.log("Saved review and updated campground");
     res.redirect(`/campgrounds/${campground._id}`);
   })
@@ -50,7 +54,7 @@ router.delete(
       $pull: { reviews: reviewId },
     });
     await Review.findByIdAndDelete(req.params.reviewId);
-    req.flash("success", "Review deleted")
+    req.flash("success", "Review deleted");
     console.log("Deleted review and updated campground");
     res.redirect(`/campgrounds/${campground._id}`);
   })

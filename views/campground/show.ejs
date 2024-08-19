@@ -13,8 +13,9 @@
         box-sizing: border-box;
       "
     >
+      <div id="map" style="height: 300px; width: 100%" class="mb-3"></div>
       <img
-        src="<%= campground.image %>"
+        src="<%= campground.image.url %>"
         class="img-fluid"
         alt="<%= campground.title %>"
         style="height: 200px; object-fit: cover; width: 100%"
@@ -23,10 +24,13 @@
       <p><%= campground.description %></p>
       <ul class="list-unstyled">
         <li><strong>Location:</strong> <%= campground.location %></li>
-        <li><strong>Submitted by:</strong> <%= campground.author.username %></li>
+        <li>
+          <strong>Submitted by:</strong> <%= campground.author.username %>
+        </li>
         <li><strong>Price:</strong> $<%= campground.price %>/night</li>
       </ul>
-      <% if (currentUser && currentUser._id && campground.author.equals(currentUser._id)) { %>
+      <% if (currentUser && currentUser._id &&
+      campground.author.equals(currentUser._id)) { %>
       <div>
         <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info"
           >Edit</a
@@ -105,7 +109,10 @@
               action="/campgrounds/<%= campground._id%>/reviews/<%= review._id%>?_method=DELETE"
               method="post"
             >
+              <% if (currentUser && currentUser._id &&
+              campground.author.equals(currentUser._id)) { %>
               <button class="btn btn-danger">Delete</button>
+              <% } %>
             </form>
           </div>
         </div>
@@ -116,3 +123,21 @@
     </div>
   </div>
 </div>
+
+<script>
+  mapboxgl.accessToken = "<%= process.env.MAPBOX_TOKEN %>";
+
+
+  const coordinates = <%- JSON.stringify(campground.geometry.coordinates) %>;
+
+
+  const map = new mapboxgl.Map({
+    container: "map", // container ID
+    center: coordinates, // starting position [lng, lat]. Note that lat must be set between -90 and 90
+    zoom: 9, // starting zoom
+  });
+
+  new mapboxgl.Marker().setLngLat(coordinates).setPopup(
+    new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3><%= campground.title %></h3>`)
+  ).addTo(map);
+</script>

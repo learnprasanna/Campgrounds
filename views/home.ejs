@@ -1,2 +1,71 @@
-<% layout("/layout/boilerplate") %>
-    <h1>Welcome to Campgrounds</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/home.css" />
+    <title>Campgrounds</title>
+    <!-- <style>
+      /* Ensure the button doesn't occupy the full width */
+      .btn-custom {
+        width: auto;
+      }
+
+      /* Center the main content vertically */
+      .cover-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+      }
+    </style> -->
+  </head>
+
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div class="d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">Campgrounds</h3>
+          <nav class="nav nav-masthead">
+            <a href="/" aria-current="page" class="nav-link active">Home</a>
+            <a href="/campgrounds" class="nav-link">Campgrounds</a>
+            <% if(!currentUser) { %>
+            <a href="/login" class="nav-link">Login</a>
+            <a href="/register" class="nav-link">Register</a>
+            <% } else { %>
+            <a href="/logout" class="nav-link">Logout</a>
+            <% } %>
+          </nav>
+        </div>
+      </header>
+
+      <main class="main-content px-3">
+        <h1>Campgrounds</h1>
+        <p class="lead">Discover Your Next Adventure: Explore the Best Campgrounds Under the Stars.</p>
+        <!-- <a
+          href="/campgrounds"
+          class="btn btn-lg btn-secondary font-weight-bold text-weight bg-white btn-custom"
+          >View campgrounds</a
+        > -->
+      </main>
+
+      <footer class="mt-auto text-white-50">
+        <p>&copy; 2024 Campgrounds</p>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

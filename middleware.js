@@ -19,7 +19,8 @@ module.exports.storeReturnTo = (req, res, next) => {
 };
 
 module.exports.validateCampground = (req, res, next) => {
-  const { error } = campValidation.validate(req.body);
+  const { image, ...campgroundData } = req.body.campground;
+  const { error } = campValidation.validate({ campground: campgroundData });
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, 400);
